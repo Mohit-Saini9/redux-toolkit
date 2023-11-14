@@ -1,18 +1,31 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-const cardSlice = createSlice({
-    name : 'Cart',
-    initialState : [],
-    reducers  : {
-        add(state, action){
-            state.push(action.payload);
-        },
-        remove(state, action){
-            return state.filter((item)=> item.id !== action.payload)
-        }
-    
-    }
-})
+// Action
+export const fetchTodos = createAsyncThunk("fetchTodos", async () => {
+  const response = await fetch("https://fakestoreapi.com/products");
+  return response.json();
+});
 
-export const {add, remove} = cardSlice.actions;
-export default cardSlice.reducer
+const todoSlice = createSlice({
+  name: "todo",
+  initialState: {
+    isLoading: false,
+    data: null,
+    isError: false,
+  },
+  extraReducers: (builder) => {
+    builder.addCase(fetchTodos.pending, (state, action) => {
+      state.isLoading = true;
+    });
+    builder.addCase(fetchTodos.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.data = action.payload;
+    });
+    builder.addCase(fetchTodos.rejected, (state, action) => {
+      console.log("Error", action.payload);
+      state.isError = true;
+    });
+  },
+});
+
+export default todoSlice.reducer;
