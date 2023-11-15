@@ -1,8 +1,16 @@
-import React from 'react'
+import Navbar from "./component/Navbar";
+import AllRoutes from "./router/AllRoutes";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-export default function App() {
+function App() {
   return (
-    <div>App</div>
-  )
+    <div className="App">
+      <ToastContainer />
+      <Navbar/>
+      <AllRoutes/>
+    </div>
+  );
 }
 
+export default App;
